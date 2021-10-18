@@ -2,7 +2,8 @@
 /firecontrol_detection/firecontrol/images/
 /firecontrol_detection/firecontrol/labels/
 
-/firecontrol_classification/data/
+
 !/firecontrol_classification/data/test.txt
 !/firecontrol_classification/data/train.txt
+/firecontrol_classification/data/
 
