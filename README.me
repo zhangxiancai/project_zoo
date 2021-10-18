@@ -1,0 +1,10 @@
+firecontrol_detection:
+    1 模型使用firecontrol_classification/models/yolov5n-0.5.yaml
+      输入:  1*3*192*256
+      输出：（onnx）
+            name: stride_8
+            type: float32[1,18,24,32]
+            name: stride_16
+            type: float32[1,18,12,16]
+            name: stride_32
+            type: float32[1,18,6,8] (pt（NCHW）转onnx时调整了输出为NHWC)
