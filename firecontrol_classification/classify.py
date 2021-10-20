@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import cv2
 import torch.nn as nn
+import os
 
 
 class BasicBlock(nn.Module):
@@ -158,7 +159,8 @@ def load_model(model, pretrained_path, load_to_cpu=False):
 
 # 载入模型
 model = resnet18()
-load_model(model, 'resnet18-68-best.pth') #accuary=0.9877
+parent = os.path.dirname(os.path.realpath(__file__))#当前文件父目录
+load_model(model, parent+'/resnet18-68-best.pth') #accuary=0.9877
 model.eval()
 
 cls_names={0:'65水带',1:'80水带',2:'多功能消防水枪',3:'黄色消防头盔',4:'空呼气瓶9L',5:'灭火防护服',6:'灭火防护手套',7:'灭火防护靴',8:'灭火防护腰带',9:'泡沫枪PQ6',

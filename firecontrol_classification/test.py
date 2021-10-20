@@ -242,18 +242,20 @@ def non_max_suppression(prediction, conf_thres=0.25, iou_thres=0.45, classes=Non
 
     return output
 
-#载入model
+# Initialize
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 device=torch.device('cuda:0')
+
+#载入model
 # model_detect=torch.load('/home/xiancai/Ruler/Pytorch/runs/train/exp28/weights/best.pt',map_location=device)
 # model_detect.eval()
-
 model_detect=attempt_load('/home/xiancai/Ruler/Pytorch/runs/train/exp28/weights/best.pt',map_location=device)
+
 #载入图片
 img=cv2.imread('/home/xiancai/Ruler/Pytorch/firecontrol/images/train/10_WIN_20201229_10_27_20_Pro.jpg')
 img=img[...,...,::-1]#BRG to RGB
 img=cv2.resize(img,(192,256),interpolation=cv2.INTER_LINEAR)
-img/=255.0
+img /=255.0
 img=torch.from_numpy(img).to(device).float()
 img.unsqueeze(0)
 img.permute(0, 3, 1, 2)

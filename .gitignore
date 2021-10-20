@@ -7,3 +7,4 @@
 !/firecontrol_classification/data/train.txt
 /firecontrol_classification/data/
 
+/detect_classify/*.jpg
