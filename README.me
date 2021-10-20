@@ -1,21 +1,23 @@
 南通消防用品检测与识别参考代码
 
-firecontrol_detection:
-    1 模型 firecontrol_detection/models/yolov5n-0.5.yaml
-      输入:  1*3*192*256
-      输出：（onnx）
-            name: stride_8
-            type: float32[1,18,24,32]
-            name: stride_16
-            type: float32[1,18,12,16]
-            name: stride_32
-            type: float32[1,18,6,8] (pt（NCHW）转onnx时调整了输出为NHWC)
+firecontrol_detection/:
+      1 result/best.onnx （onnx）
+          检测模型：firecontrol_detection/models/yolov5n-0.5.yaml
+          输入:  1*3*192*256
+          输出：
+                name: stride_8
+                type: float32[1,18,24,32]
+                name: stride_16
+                type: float32[1,18,12,16]
+                name: stride_32
+                type: float32[1,18,6,8] (pt（NCHW）转onnx时调整了输出为NHWC)
 
-firecontrol_classification:
-    1 模型 resnet18
-      输入：1*3*112*112
-      输出：（pt） 1*24（24类）
+firecontrol_classification/:
+    1 resnet18-68-best.pth （pt）
+          分类模型：resnet18
+          输入：1*3*112*112
+          输出： 1*24（24类）
 
-detect_classify:
+detect_classify/:
     1 classify.py 分类脚本
     2 detect_classify.py 检测+分类脚本
