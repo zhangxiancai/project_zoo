@@ -3,8 +3,8 @@ from torch.autograd import Variable
 from backbones.resnet import resnet18
 from collections import OrderedDict
 
-output_onnx = 'r18.onnx'
-pytorch_model = 'checkpoints/resnet18/resnet18-13-best.pth'
+output_onnx = 'fire_r18.onnx'
+pytorch_model = 'resnet18-68-best.pth'
 '''
 Epoch:13 Iter:0/68 LR:0.0398 Loss:0.0006	
 Epoch:13 Iter:50/68 LR:0.0397 Loss:0.0007	

@@ -32,7 +32,8 @@ if __name__ == '__main__':
     if not os.path.exists(checkpoint_path):
         os.makedirs(checkpoint_path)
     checkpoint_path = os.path.join(checkpoint_path, '{net}-{epoch}-{type}.pth')
-    
+
+    #模型
     if args.net == 'resnet18':
         backbone = resnet18()
     elif args.net == 'resnet26':
@@ -51,7 +52,8 @@ if __name__ == '__main__':
 
     #backbone.reset_classifier(num_classes=args.num_classes)
     # os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'  #debug
-    print('-----------',torch.cuda.device_count())#
+    #设备
+    print(f'total of gpu:{torch.cuda.device_count()}')#
     if torch.cuda.device_count() > 1:
         backbone = nn.DataParallel(backbone)
 
@@ -62,10 +64,12 @@ if __name__ == '__main__':
     if os.path.exists(args.resume):
         load_model(backbone, args.resume)    
 
+    #损失函数和优化算法
     cross_entropy = nn.CrossEntropyLoss()
     # optimizer = optim.SGD(noBiasDecay(backbone, args.lr, 1e-4), momentum=0.9)
     optimizer = optim.SGD(noBiasDecay(backbone, args.lr, 1e-4), momentum=0.9)
 
+    #数据载入
     valset   = Dataset(root_dir=args.root, data_list=args.val_list, local_rank=0)
     trainset = Dataset(root_dir=args.root, data_list=args.train_list, local_rank=0)
     val_loader   = DataLoaderX(local_rank=0, dataset=valset, batch_size=args.batch_size, num_workers=2, pin_memory=True, drop_last=True)

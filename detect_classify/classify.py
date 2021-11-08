@@ -136,7 +136,6 @@ def resnet18():
     return ResNet(BasicBlock, [2, 2, 2, 2])
 
 
-
 def remove_prefix(state_dict, prefix):
     ''' Old style model is stored with all names of parameters sharing common prefix 'module.' '''
     print('remove prefix \'{}\''.format(prefix))
@@ -162,15 +161,16 @@ def load_model(model, pretrained_path, load_to_cpu=False):
 
 # 载入模型
 model = resnet18()
-parent = os.path.dirname(os.path.realpath(__file__))#当前文件父目录
-load_model(model, parent+'/resnet18-68-best.pth') #accuary=0.9877
+parent = os.path.dirname(os.path.realpath(__file__))  # 当前文件父目录
+load_model(model, parent + '/resnet18-68-best.pth')  # accuary=0.9877
 model.eval()
 
-cls_names={0:'65水带',1:'80水带',2:'多功能消防水枪',3:'黄色消防头盔',4:'空呼气瓶9L',5:'灭火防护服',6:'灭火防护手套',7:'灭火防护靴',8:'灭火防护腰带',9:'泡沫枪PQ6',
-        10:'抢险救援服',11:'抢险救援头盔',12:'抢险救援靴',13:'三分水器',14:'水域救援头盔',15:'水域救援靴',16:'水域漂浮背心',17:'消防栓扳手',18:'新款黄色消防头盔',19:'液压剪',
-        20: '液压救援顶杆', 21: '正压式呼吸面罩', 22: '直流水枪', 23: '止水器'}
+cls_names = {0: '65水带', 1: '80水带', 2: '多功能消防水枪', 3: '黄色消防头盔', 4: '空呼气瓶9L', 5: '灭火防护服', 6: '灭火防护手套', 7: '灭火防护靴', 8: '灭火防护腰带', 9: '泡沫枪PQ6',
+             10: '抢险救援服', 11: '抢险救援头盔', 12: '抢险救援靴', 13: '三分水器', 14: '水域救援头盔', 15: '水域救援靴', 16: '水域漂浮背心', 17: '消防栓扳手', 18: '新款黄色消防头盔', 19: '液压剪',
+             20: '液压救援顶杆', 21: '正压式呼吸面罩', 22: '直流水枪', 23: '止水器'}
 
-def changeImages(img_address,box):
+
+def changeImages(img_address, box):
     '''
     裁剪图片,调整为正方形
     :param img_address:
@@ -178,43 +178,42 @@ def changeImages(img_address,box):
     :return:
     '''
 
-    img=cv2.imread(img_address)
-    H,W=img.shape[0],img.shape[1]
+    img = cv2.imread(img_address)
+    H, W = img.shape[0], img.shape[1]
 
     # ts=lab
-    #check yolo标签
-    x,y,w,h=int(box[0]*W),int(box[1]*H),int(box[2]*W),int(box[3]*H)
-    c1, c2 = max(x - int(w/2),0), min(x + int(w/2),W)
-    r1, r2 = max(y - int(h/2),0), min(y + int(h/2),H)#yolo标签越界修正（11/2425）
-    x,y,w,h=(c1+c2)//2,(r1+r2)//2,c2-c1,r2-r1
+    # check yolo标签
+    x, y, w, h = int(box[0] * W), int(box[1] * H), int(box[2] * W), int(box[3] * H)
+    c1, c2 = max(x - int(w / 2), 0), min(x + int(w / 2), W)
+    r1, r2 = max(y - int(h / 2), 0), min(y + int(h / 2), H)  # yolo标签越界修正（11/2425）
+    x, y, w, h = (c1 + c2) // 2, (r1 + r2) // 2, c2 - c1, r2 - r1
 
     # 转为正方形
-    s=int(max(w,h)/2)
-    c1,c2=x-s,x+s
-    r1,r2=y-s,y+s
+    s = int(max(w, h) / 2)
+    c1, c2 = x - s, x + s
+    r1, r2 = y - s, y + s
 
-    #越界填充
-    if c1<0:
-        pad=-c1
-        img=cv2.copyMakeBorder(img,0,0,pad,0,cv2.BORDER_CONSTANT,0)
-        c1,c2=c1+pad,c2+pad
+    # 越界填充
+    if c1 < 0:
+        pad = -c1
+        img = cv2.copyMakeBorder(img, 0, 0, pad, 0, cv2.BORDER_CONSTANT, 0)
+        c1, c2 = c1 + pad, c2 + pad
     if r1 < 0:
         pad = -r1
-        img=cv2.copyMakeBorder(img, pad, 0, 0, 0, cv2.BORDER_CONSTANT, 0)
+        img = cv2.copyMakeBorder(img, pad, 0, 0, 0, cv2.BORDER_CONSTANT, 0)
         r1, r2 = r1 + pad, r2 + pad
     if c2 > img.shape[1]:
-        pad=c2-img.shape[1]
-        img=cv2.copyMakeBorder(img,0,0,0,pad,cv2.BORDER_CONSTANT,0)
+        pad = c2 - img.shape[1]
+        img = cv2.copyMakeBorder(img, 0, 0, 0, pad, cv2.BORDER_CONSTANT, 0)
     if r2 > img.shape[0]:
-        pad=r2-img.shape[0]
-        img=cv2.copyMakeBorder(img,0,pad,0,0,cv2.BORDER_CONSTANT,0)
+        pad = r2 - img.shape[0]
+        img = cv2.copyMakeBorder(img, 0, pad, 0, 0, cv2.BORDER_CONSTANT, 0)
 
-    img=img[r1:r2,c1:c2,...]#截取
+    img = img[r1:r2, c1:c2, ...]  # 截取
     return img
 
 
-
-def classify(img_address,box):
+def classify(img_address, box):
     '''
     分类
     :param img_address: 图片地址(str)
@@ -222,8 +221,8 @@ def classify(img_address,box):
     :return: 类别（str）
     '''
 
-    #预处理
-    image=changeImages(img_address,box) #裁剪图片,调整为正方形
+    # 预处理
+    image = changeImages(img_address, box)  # 裁剪图片,调整为正方形
     # cv2.imwrite('扣图.jpg',image)# debug
     resized = cv2.resize(image, (112, 112))
     resized = resized[..., ::-1]  # BGR to RGB
@@ -233,7 +232,7 @@ def classify(img_address,box):
     resized = (resized - 127.5) / 128.0
     img = torch.from_numpy(resized)
 
-    #inference
+    # inference
     pre = model(img)
     cls = torch.argmax(pre)
     return cls_names[int(cls)]
@@ -242,7 +241,8 @@ def classify(img_address,box):
 if __name__ == '__main__':
     # lab={'x': 316.30667, 'y': 468.55704, 'w': 793.00353, 'h': 283.41781}
     # x,y,w,h=(lab['x'] + lab['w'])/2/1280,(lab['y'] + lab['h'])/2/960,lab['w']/1280,lab['h']/960
-    cls = classify('test1.jpg',[0.554296875, 0.6354166666666666, 0.60390625, 0.3020833333333333])#分类
+
+    cls = classify('test1.jpg', [0.554296875, 0.6354166666666666, 0.60390625, 0.3020833333333333])  # 分类
     print(cls)
 
     # # 载入测试图片集
@@ -264,4 +264,4 @@ if __name__ == '__main__':
     #     if lab!=cls:
     #         errs.append([lab,cls])
     # print(res)
-    # print('errors',errs)
+    # print('errors:',errs)

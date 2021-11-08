@@ -1,7 +1,7 @@
 /firecontrol_detection/result/
 /firecontrol_detection/firecontrol/images/
 /firecontrol_detection/firecontrol/labels/
-
+/firecontrol_detecton/runs/
 
 !/firecontrol_classification/data/test.txt
 !/firecontrol_classification/data/train.txt
