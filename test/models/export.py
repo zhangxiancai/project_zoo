@@ -21,7 +21,7 @@ from utils.general import set_logging, check_img_size
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', type=str, default='/home/xiancai/fire-equipment-demo/firecontrol_detection/Result/2021_12_06/best.pt', help='weights path')  # from yolov5/models/
+    parser.add_argument('--weights', type=str, default='/home/xiancai/Ruler/Pytorch/runs/train/exp24/weights/best.pt', help='weights path')  # from yolov5/models/
     parser.add_argument('--img-size', nargs='+', type=int, default=[192, 256], help='image size')  # height, width
     parser.add_argument('--batch-size', type=int, default=1, help='batch size')
     opt = parser.parse_args()

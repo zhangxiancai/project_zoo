@@ -165,8 +165,8 @@ def detect(save_img=False):
 if __name__ == '__main__':
     #python3 detect.py --save-txt --save-conf
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='/home/xiancai/fire-equipment-demo/firecontrol_detection/result/best.pt', help='model.pt path(s)')
-    parser.add_argument('--source', type=str, default='/home/xiancai/Ruler/Pytorch/firecontrol_com/images/val/3_WIN_20201228_14_45_11_Pro.jpg', help='source')  # file/folder, 0 for webcam
+    parser.add_argument('--weights', nargs='+', type=str, default='Result/2021_11_28/best.pt', help='model.pt path(s)')
+    parser.add_argument('--source', type=str, default='/home/xiancai/DATA/FIRE_DATA/fire_detect_dataset/images/val', help='source')  # file/folder, 0 for webcam
     parser.add_argument('--img-size', type=int, default=256, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.35, help='object confidence threshold')#0.25
     parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')

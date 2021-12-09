@@ -1,5 +1,5 @@
 '''
-消防物品检测和分类
+统计消防物品检测和分类精度
 '''
 import shutil
 
@@ -46,14 +46,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
     return img, ratio, (dw, dh)
 
 
-# 载入model
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-device = torch.device('cuda:0')
-# device=torch.device('cpu')
-det_model_address='/home/xiancai/fire-equipment-demo/firecontrol_detection/Result/2021_12_06/best.pt'
-# model_detect = attempt_load(os.path.dirname(os.path.realpath(__file__)) + '/best.pt', map_location=device).eval()
-model_detect = attempt_load(det_model_address, map_location=device).eval()
-conf, iou = 0.35, 0.45  # NMS的阈值和iou 0.25 0.45
+
 
 
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True, stride=32):
@@ -147,10 +140,21 @@ def detect_classify(img_address):
 
     cls = []
     for i in range(pre.shape[0]):
+
         cl = classify.classify(img_address, pre[i, :4])  #
         cls += [cl]
     return np.hstack((pre, np.array(cls).reshape(len(cls), 1)))
 
+
+# 载入model
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+device = torch.device('cuda:0')
+# device=torch.device('cpu')
+det_model_address='/home/xiancai/fire-equipment-demo/firecontrol_detection/Result/2021_11_25/best.pt'
+# det_model_address='/home/xiancai/fire-equipment-demo/detect_classify/best.pt'
+# model_detect = attempt_load(os.path.dirname(os.path.realpath(__file__)) + '/best.pt', map_location=device).eval()
+model_detect = attempt_load(det_model_address, map_location=device).eval()
+conf, iou = 0.35, 0.45  # NMS的阈值和iou 0.25 0.45
 
 if __name__ == '__main__':
     # res = detect_classify('/home/xiancai/DATA/FIRE_DATA/fire_detect_dataset/images/val/53_d11_24_1637661828.jpg')
@@ -158,43 +162,122 @@ if __name__ == '__main__':
     # print(res)
 
 
-    # 测试训练集上的全部图片
-    # root='/home/xiancai/Ruler/Pytorch/firecontrol/images/train/'
-    root = '/home/xiancai/DATA/FIRE_DATA/fire_detect_dataset/images/val/'
-    out_false_img='/home/xiancai/DATA/FIRE_DATA/detect/fal1/' #检测错误图片存储路径
-    if not os.path.exists(out_false_img):
-        os.mkdir(out_false_img)
-    ls=os.listdir(root)
+    '''
+    测试检测+识别模型的精度 (检测一张图片，检测出的第一个类别与图片类别相同则为正确),错误图片保存在out_false_img
+    测试一个文件夹内的全部图片, 文件名第一个前缀为类别  图片可以有0,1,多个obj,(多个obj测试第一个) 
+    #图片有且只有一个obj
+    #det_model_address   classify.model_address
+    '''
+    # init
+    # root = '/home/xiancai/DATA/FIRE_DATA/fire_11_30/temp_jpg/'
+    root = '/home/xiancai/DATA/FIRE_DATA/fire_detect_dataset/images/train/'
+    print('---------------------------------------------------')
+    print(f'test data: {root}\ntest det_model: {det_model_address}\ntest cls_model: {classify.cls_model_address}\n')
 
-    cls_ids={v:k for k,v in classify.cls_names.items()} # name:id
-    res = np.zeros((classify.cls_number, classify.cls_number), int)
-    err=[]
+    ls=os.listdir(root)
+    res = np.zeros((classify.cls_number+1, classify.cls_number+1), int)
+    err_inf=[]
+    err_imgs_addr=[] #错误图片地址
+    err_pre=[]
+    cls_ids = {v: k for k, v in classify.cls_names.items()}  # name:id
+
+    # 检测+分类
     for ind,i in enumerate(ls):
         pre=detect_classify(root+i) #检测+分类 n*6 numpy
         # tru = classify.cls_names[int(i.split('_')[0]) - 1]  #
-        tru = classify.cls_names[int(i.split('_')[0]) ]  #文件名第一个前缀为类别 图片有且只有一个类别
 
-        #
-        if pre is None:
-            err.append(f'{root+i},tru:{tru},pre:{pre}')
-            shutil.copy(root+i,out_false_img+i)
-            continue
-        pre_id,tru_id=cls_ids[pre[0, -1]], cls_ids[tru] #只取 pre[0]
+        pre_id = cls_ids[pre[0, -1]] if pre is not None else classify.cls_number
+        fro=i.split('_')[0]#文件名第一个前缀为类别 图片有且只有一个类别
+        tru =classify.cls_names[int(fro)] if fro!='f' else 'f'
+        tru_id=int(fro) if fro!='f' else classify.cls_number
+
         if pre_id!=tru_id:
-            err.append(f'{root+i},tru:{tru},pre:{pre}')
-            shutil.copy(root + i, out_false_img + i)
+            err_imgs_addr.append(root+i)
+            # err_inf.append(f'{root+i},tru:{tru},pre:{pre[0][-1]}')
+            err_inf.append([root+i,tru_id,pre_id])
+            # shutil.copy(root + i, out_false_img + i) #
         res[tru_id,pre_id]+=1
-        print(ind, '/', len(ls), i, pre)
-    print(res)
+        print(ind, '/', len(ls),':', i, pre)
+    # print(res)
+    # for i in res:
+    #     print(i)
 
     # 画res
+    print(f'test data: {root}\ntest det_model: {det_model_address}\ntest cls_model: {classify.cls_model_address}\n')
+    res_inf=[]
     for i,re in enumerate(res):
         tot=sum(re)
         acc=round(re[i]/sum(re),4) if sum(re) else 0.0
-        tag='<------' if acc<1 else ''
-        print(f'{i}:\ttotal:{tot}\tacc:{acc} \t{classify.cls_names[i]} {tag}')
+        tag= ''
+        if acc<0.9: #
+            tag='<-------'
+            re_ind=sorted(range(len(re)),key=lambda x:re[x],reverse=True) #re降序后的下标
+            # print(re_ind)
+            for r_in in re_ind:
+                r_ac=round(re[r_in]/tot,4) if tot!=0 else 0.0
+                if r_ac > 0.01 and r_in!=i: #
+                    tag+=f' {classify.cls_names[r_in]}:{r_ac}'
+        r_inf=f'{i}:\ttot:{tot}\tacc:{acc} \t{classify.cls_names[i]} {tag}' #''.expandtabs(8)
+        print(r_inf)
+        res_inf.append([acc,r_inf])
 
-    for i in err:
-        print(f'err: {i}')
-    print(f'err/total:{len(err)}/{len(ls)}')
-    print(f'aucc:{1-len(err)/len(ls)}')
+    # 画依照acc排序的res
+    res_inf_sort=sorted(range(len(res_inf)),key=lambda x:res_inf[x][0],reverse=True) #res_inf[][0]降序
+    print('\nSORTED RES:')
+    print(f'test data: {root}\ntest det_model: {det_model_address}\ntest cls_model: {classify.cls_model_address}\n')
+    for res_inf_sor in res_inf_sort:
+        print(res_inf[res_inf_sor][1])
+
+    # for inf in err_inf:
+    #     print(f'{i}err: ')
+    print(f'err/total:{len(err_imgs_addr)}/{len(ls)}')
+    aucc=round(1-len(err_imgs_addr)/len(ls),4)
+    print(f'aucc:{aucc}')
+
+
+    # 画框，保存错误图片err_imgs_addr
+    dma, cma, rot = det_model_address.split('/'), classify.cls_model_address.split('/'), root.split('/')
+    # out_false_img = '/home/xiancai/DATA/FIRE_DATA/detect/fal1'
+    out_false_img=f'/home/xiancai/DATA/FIRE_DATA/detect/fal_{dma[-2]}_{dma[-1]}__{cma[-2]}_{cma[-1]}__{rot[-3]}_{rot[-2]}_{aucc}/' #检测错误图片存储路径
+    if not os.path.exists(out_false_img):
+        os.mkdir(out_false_img)
+
+    for ad in err_imgs_addr:
+        img0 = cv2.imread(ad)
+        pre = detect_classify(ad)
+        if pre is not None:
+            # 画框
+            for i in range(pre.shape[0]):
+                H,W=img0.shape[:2]
+                x,y,w,h=float(pre[i, 0]), float(pre[i, 1]),float(pre[i, 2]), float(pre[i, 3])
+                x1,y1,x2,y2=int((x-w/2)*W),int((y-h/2)*H),int((x+w/2)*W),int((y+h/2)*H)
+                pt1 = [x1, y1]
+                pt2 = [x2,y2]
+                cv2.rectangle(img0, pt1, pt2, (0, 255, 0), 2)
+
+                pt3 = [x1 + 16, y1 + 16]
+                lab = f'{round(float(pre[i, 4]), 2)}:{cls_ids[pre[i, 5]]}'
+                cv2.putText(img0, lab, pt3, fontFace=cv2.FONT_HERSHEY_PLAIN, fontScale=1.4, color=[225, 40, 168],
+                            thickness=4)
+        cv2.imwrite(out_false_img+'err_'+ad.split('/')[-1],img0)
+    print(f'err img saved to {out_false_img}')
+
+    from PIL import ImageDraw, ImageFont, Image
+
+
+    # def img_writer(text_size, xy, text, text_color, fontStyle, img):
+    #     draw = ImageDraw.Draw(img)
+    #     # 字体的格式 这里的SimHei.ttf需要有这个字体
+    #     fontStyle = ImageFont.truetype(fontStyle, text_size, encoding='utff8')
+    #     # 绘制文本
+    #     draw.text(xy, text, text_color, font=fontStyle)
+    #
+    #
+    # if __name__ == '__main__':
+    #     text_size = 50  # 字体大小
+    #     xy = (56, 1700)  # 起始位置
+    #     data = 'Menhenra酱，卡哇伊！'  # 内容
+    #     text_color = (26, 42, 44)  # 字体颜色
+    #     fontStyle = f'PingFang Bold.ttf'  # 字体位置
+    #     img = Image.open('图片路径')
+    #     img_writer(text_size, xy, data, text_color, fontStyle, img)

@@ -1,10 +1,14 @@
-/firecontrol_detection/result/
-/firecontrol_detection/firecontrol/images/
-/firecontrol_detection/firecontrol/labels/
-/firecontrol_detecton/runs/
+*.jpg
+*.pyc
+*.pt
+*.pth
+*.onnx
 
-!/firecontrol_classification/data/test.txt
-!/firecontrol_classification/data/train.txt
-/firecontrol_classification/data/
+firecontrol_detection/runs/*/*/*
 
-/detect_classify/*.jpg
+firecontrol_classification/checkpoints/
+firecontrol_classification/Result/
+
+
+#classify_metric_learning/
+#!classify_metric_learning/classify.py
