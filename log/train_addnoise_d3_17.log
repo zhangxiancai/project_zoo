@@ -1,0 +1,51 @@
+RepVGG Block, identity =  None
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+Loading data.
+/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP/files.txt
+Starting training.
+/home/xiancai/.local/lib/python3.7/site-packages/torch/optim/adam.py:74: UserWarning: optimizer contains a parameter group with duplicate parameters; in future, this will cause an error; see github.com/pytorch/pytorch/issues/40967 for more information
+  super(Adam, self).__init__(params, defaults)
+usage: train.py [-h] [--gpu GPU_ID] [--data_dir DATA_DIR]
+                [--filename_list FILENAME_LIST] [--snapshot SNAPSHOT]
+                [--batch_size BATCH_SIZE] [--show_viz SHOW_VIZ]
+                [--dataset DATASET]
+train.py: error: unrecognized arguments: --CUDA_VISIBLE_DEVICES 1
+Epoch [1/30], Iter [100/1913] Loss: 0.327903
+Epoch [1/30], Iter [200/1913] Loss: 0.219079
+Epoch [1/30], Iter [300/1913] Loss: 0.215563
+Epoch [1/30], Iter [400/1913] Loss: 0.396968
+Epoch [1/30], Iter [500/1913] Loss: 0.270161
+Epoch [1/30], Iter [600/1913] Loss: 0.434368
+Epoch [1/30], Iter [700/1913] Loss: 0.216374
+Epoch [1/30], Iter [800/1913] Loss: 0.243094
+Epoch [1/30], Iter [900/1913] Loss: 0.347644
+Epoch [1/30], Iter [1000/1913] Loss: 0.111242
+Epoch [1/30], Iter [1100/1913] Loss: 0.310736
+Epoch [1/30], Iter [1200/1913] Loss: 0.174523
+Epoch [1/30], Iter [1300/1913] Loss: 0.305430
+Epoch [1/30], Iter [1400/1913] Loss: 0.168381
+Epoch [1/30], Iter [1500/1913] Loss: 0.211375
+Epoch [1/30], Iter [1600/1913] Loss: 0.142130
+Epoch [1/30], Iter [1700/1913] Loss: 0.122390
+Epoch [1/30], Iter [1800/1913] Loss: 0.141721
+Epoch [1/30], Iter [1900/1913] Loss: 0.281119

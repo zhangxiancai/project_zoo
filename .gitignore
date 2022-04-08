@@ -1,0 +1,8 @@
+*.tar
+*.pth
+*.onnx
+*.pyc
+
+pics
+output
+

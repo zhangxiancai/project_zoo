@@ -1,0 +1,87 @@
+Namespace(batch_size=64, data_dir='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP', dataset='Pose_300W_LP', filename_list='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP/files.txt', gpu_id=0, img_size=112, lr=1e-05, num_epochs=180, output_string='', snapshot='/home/xiancai/face_angle/6DRepNet/results/2022_03_23/_epoch_173_mae7.536.tar', test_data_dir='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/AFLW2000/', test_dataset='AFLW2000', test_filename_list='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/AFLW2000/files.txt')
+RepVGG Block, identity =  None
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+Loading data.
+txts: ['/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP/train.txt', '/data1/xiancai/FACE_ANGLE_DATA/2022_04_01/train2.txt', '/data1/xiancai/FACE_ANGLE_DATA/2022_04_02/train2.txt']
+/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/AFLW2000/files.txt
+opt: Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0
+    weight_decay: 0
+
+Parameter Group 1
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 1e-05
+    weight_decay: 0
+
+Parameter Group 2
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.0001
+    weight_decay: 0
+
+Parameter Group 3
+    amsgrad: False
+    betas: (0.9, 0.999)
+    eps: 1e-08
+    lr: 0.0001
+    weight_decay: 0
+)
+Starting training.
+Epoch [1/180], Iter [100/1958] lr 0.00000250 Loss: 0.028891
+Epoch [1/180], Iter [200/1958] lr 0.00000250 Loss: 0.041455
+Epoch [1/180], Iter [300/1958] lr 0.00000250 Loss: 0.027594
+Epoch [1/180], Iter [400/1958] lr 0.00000250 Loss: 0.034696
+Epoch [1/180], Iter [500/1958] lr 0.00000250 Loss: 0.025331
+Epoch [1/180], Iter [600/1958] lr 0.00000250 Loss: 0.028856
+Epoch [1/180], Iter [700/1958] lr 0.00000250 Loss: 0.043039
+Epoch [1/180], Iter [800/1958] lr 0.00000250 Loss: 0.052020
+Epoch [1/180], Iter [900/1958] lr 0.00000250 Loss: 0.023843
+Epoch [1/180], Iter [1000/1958] lr 0.00000250 Loss: 0.028357
+Epoch [1/180], Iter [1100/1958] lr 0.00000250 Loss: 0.017310
+Epoch [1/180], Iter [1200/1958] lr 0.00000250 Loss: 0.026088
+Epoch [1/180], Iter [1300/1958] lr 0.00000250 Loss: 0.031306
+Epoch [1/180], Iter [1400/1958] lr 0.00000250 Loss: 0.027600
+Traceback (most recent call last):
+  File "train.py", line 433, in <module>
+    train_a0().train()
+  File "train.py", line 270, in train
+    for i, (images, gt_mat, _, _) in enumerate(train_loader):
+  File "/home/xiancai/.local/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 521, in __next__
+    data = self._next_data()
+  File "/home/xiancai/.local/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1183, in _next_data
+    return self._process_data(data)
+  File "/home/xiancai/.local/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1229, in _process_data
+    data.reraise()
+  File "/home/xiancai/.local/lib/python3.7/site-packages/torch/_utils.py", line 434, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/xiancai/.local/lib/python3.7/site-packages/torch/utils/data/_utils/worker.py", line 287, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/home/xiancai/.local/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 49, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/xiancai/.local/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 49, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/xiancai/face_angle/6DRepNet/datasets.py", line 357, in __getitem__
+    img_path, p,y,r=its[0],float(its[1]),float(its[2]),float(its[3]) #
+ValueError: could not convert string to float: 
+

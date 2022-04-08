@@ -1,0 +1,48 @@
+Namespace(batch_size=64, data_dir='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP', dataset='Pose_300W_LP', filename_list='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP/files.txt', gpu_id=0, img_size=224, lr=1e-05, num_epochs=180, output_string='', snapshot='', test_data_dir='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/AFLW2000/', test_dataset='AFLW2000', test_filename_list='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/AFLW2000/files.txt')
+RepVGG Block, identity =  None
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(48, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  BatchNorm2d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+RepVGG Block, identity =  None
+Loading data.
+/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP/files.txt
+/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/AFLW2000/files.txt
+Starting training.
+Epoch [1/180], Iter [100/1913] lr 0.00000000 Loss: 112.490303 L1: 112.220222 L2: 0.270077
+Epoch [1/180], Iter [200/1913] lr 0.00000000 Loss: 74.919540 L1: 74.699158 L2: 0.220386
+Epoch [1/180], Iter [300/1913] lr 0.00000000 Loss: 49.193573 L1: 49.019485 L2: 0.174087
+Epoch [1/180], Iter [400/1913] lr 0.00000000 Loss: 45.568336 L1: 45.407722 L2: 0.160615
+Epoch [1/180], Iter [500/1913] lr 0.00000000 Loss: 33.892353 L1: 33.769581 L2: 0.122772
+Epoch [1/180], Iter [600/1913] lr 0.00000000 Loss: 32.096203 L1: 31.993198 L2: 0.103004
+Epoch [1/180], Iter [700/1913] lr 0.00000000 Loss: 29.434069 L1: 29.340153 L2: 0.093915
+Epoch [1/180], Iter [800/1913] lr 0.00000000 Loss: 26.676880 L1: 26.593246 L2: 0.083633
+Epoch [1/180], Iter [900/1913] lr 0.00000000 Loss: 26.446838 L1: 26.355639 L2: 0.091201
+Epoch [1/180], Iter [1000/1913] lr 0.00000000 Loss: 26.380928 L1: 26.245304 L2: 0.135624
+Epoch [1/180], Iter [1100/1913] lr 0.00000000 Loss: 23.464333 L1: 23.365644 L2: 0.098688
+Epoch [1/180], Iter [1200/1913] lr 0.00000000 Loss: 20.817574 L1: 20.737320 L2: 0.080254
+Epoch [1/180], Iter [1300/1913] lr 0.00000000 Loss: 18.246830 L1: 18.149885 L2: 0.096946
+Epoch [1/180], Iter [1400/1913] lr 0.00000000 Loss: 18.403036 L1: 18.328215 L2: 0.074821
+Epoch [1/180], Iter [1500/1913] lr 0.00000000 Loss: 18.911768 L1: 18.825449 L2: 0.086320
+Epoch [1/180], Iter [1600/1913] lr 0.00000000 Loss: 17.431377 L1: 17.350857 L2: 0.080521
+Epoch [1/180], Iter [1700/1913] lr 0.00000000 Loss: 18.490828 L1: 18.405659 L2: 0.085170
+Epoch [1/180], Iter [1800/1913] lr 0.00000000 Loss: 17.442726 L1: 17.364859 L2: 0.077867
+Epoch [1/180], Iter [1900/1913] lr 0.00000000 Loss: 18.070984 L1: 17.994188 L2: 0.076796
+Traceback (most recent call last):
+  File "train_distilling.py", line 426, in <module>
+    train_a0().train()
+  File "train_distilling.py", line 300, in train
+    mae = test.ttest(student,test_loader,self.args)
+  File "/home/xiancai/face_angle/6DRepNet/test.py", line 88, in ttest
+    R_pred) * 180 / np.pi
+  File "/home/xiancai/face_angle/6DRepNet/rep_utils.py", line 162, in compute_euler_angles_from_rotation_matrices
+    batch=rotation_matrices.shape[0]
+AttributeError: 'tuple' object has no attribute 'shape'
