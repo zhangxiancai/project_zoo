@@ -36,8 +36,8 @@ def convert():
     print('Done.')
 
 
-tar='/home/xiancai/face_angle/6DRepNet/output/snapshots/SixDRepNet_1649297858_bs64/RepVGG-A0_epoch_177_mae13.5007.tar'
-pth='/home/xiancai/face_angle/6DRepNet/output/snapshots/SixDRepNet_1649297858_bs64/RepVGG-A0_epoch_177_mae13.5007.pth'
+tar='/home/xiancai/face_angle/6DRepNet/output/snapshots/SixDRepNet_1649297858_bs64/RepVGG-A0_epoch_101_mae13.2071.tar'
+pth='/home/xiancai/face_angle/6DRepNet/output/snapshots/SixDRepNet_1649297858_bs64/RepVGG-A0_epoch_101_mae13.2071.pth'
 model_type='RepVGG-A0'
 
 if __name__ == '__main__':

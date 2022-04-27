@@ -58,7 +58,7 @@ def parse_args():
         parser.add_argument('--num_epochs', dest='num_epochs',help='Maximum number of training epochs.',default=180, type=int)
         parser.add_argument('--batch_size', dest='batch_size', help='Batch size.',default=64, type=int)
         parser.add_argument('--lr', dest='lr', help='Base learning rate.',default=0.0000025, type=float) # 0.00001
-        parser.add_argument('--img_size', dest='img_size', help='Img size.', default=112, type=int) # 图片大小
+        parser.add_argument('--img_size', dest='img_size', help='Img size.', default=224, type=int) # 图片大小
 
         parser.add_argument('--dataset', dest='dataset', help='Dataset type.',default='Pose_300W_LP', type=str) #Pose_300W_LP
         parser.add_argument('--data_dir', dest='data_dir', help='Directory path for data.',default='/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP', type=str)#BIWI_70_30_train.npz
@@ -71,7 +71,7 @@ def parse_args():
 
         parser.add_argument('--gpu', dest='gpu_id', help='GPU device id to use [0]', default=0, type=int)
         parser.add_argument('--output_string', dest='output_string',help='String appended to output snapshots.', default='', type=str)
-        parser.add_argument('--snapshot', dest='snapshot', help='Path of model snapshot.',default='/home/xiancai/face_angle/6DRepNet/results/2022_03_16/_epoch_30.tar', type=str)
+        parser.add_argument('--snapshot', dest='snapshot', help='Path of model snapshot.',default='', type=str)
         args = parser.parse_args()
         return args
 
@@ -82,8 +82,8 @@ class train_a0:
 
     args = parse_args()
     # CUDA_VISIBLE_DEVICES='1,2,3,4'
-    backbone_name='RepVGG-A0'
-    backbone_file='/home/xiancai/face_angle/6DRepNet_04/models/RepVGG-A0-train.pth'
+    backbone_name='RepVGG-A0s-stu'
+    backbone_file='/home/xiancai/face_angle/6DRepNet_04/models/RepVGG-A0s-stu-train.pth'
     plot=plot_lml()
 
     # def get_ignored_params(self, model):
@@ -194,36 +194,38 @@ class train_a0:
 
         # data
         print('Loading data.')
-        # normalize = transforms.Normalize(
-        #     mean=[0.485, 0.456, 0.406],
-        #     std=[0.229, 0.224, 0.225])
-        # transformations = transforms.Compose([transforms.Resize(int(self.args.img_size*1.07)),
-        #                                       transforms.RandomCrop(self.args.img_size),
-        #                                       transforms.ToTensor(),
-        #                                       normalize])
-        # pose_dataset = datasets.getDataset(
-        #     self.args.dataset, self.args.data_dir, self.args.filename_list, transformations)
+        # training data
+        normalize = transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225])
+        transformations = transforms.Compose([transforms.Resize(int(self.args.img_size*1.07)),
+                                              transforms.RandomCrop(self.args.img_size),
+                                              transforms.ToTensor(),
+                                              normalize])
+        pose_dataset = datasets.getDataset(
+            self.args.dataset, self.args.data_dir, self.args.filename_list, transformations)
 
-        pose_dataset = datasets.UserDateset(txts=['/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP/train.txt',
-                                                  '/data1/xiancai/FACE_ANGLE_DATA/2022_04_01/train2_clean.txt',
-                                                  '/data1/xiancai/FACE_ANGLE_DATA/2022_04_02/train2_clean.txt'],
-                                            imgsize=self.args.img_size)
+        # pose_dataset = datasets.UserDateset(txts=['/data1/xiancai/FACE_ANGLE_DATA/2022_03_15/300W_LP/train.txt',
+        #                                           '/data1/xiancai/FACE_ANGLE_DATA/2022_04_01/train2_clean.txt',
+        #                                           '/data1/xiancai/FACE_ANGLE_DATA/2022_04_02/train2_clean.txt'],
+        #                                     imgsize=self.args.img_size)
+
         train_loader = torch.utils.data.DataLoader(
             dataset=pose_dataset,
             batch_size=batch_size,
             shuffle=True,
             num_workers=4)
         # testing data
-        # test_transformations = transforms.Compose([transforms.Resize(int(self.args.img_size*1.07)),
-        #                                       transforms.CenterCrop(
-        #                                           self.args.img_size), transforms.ToTensor(),
-        #                                       transforms.Normalize(mean=[0.485, 0.456, 0.406],
-        #                                                            std=[0.229, 0.224, 0.225])])
         test_transformations = transforms.Compose([transforms.Resize(int(self.args.img_size*1.07)),
                                               transforms.CenterCrop(
                                                   self.args.img_size), transforms.ToTensor(),
                                               transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                                   std=[0.225, 0.225, 0.225])])
+                                                                   std=[0.229, 0.224, 0.225])])
+        # test_transformations = transforms.Compose([transforms.Resize(int(self.args.img_size*1.07)),
+        #                                       transforms.CenterCrop(
+        #                                           self.args.img_size), transforms.ToTensor(),
+        #                                       transforms.Normalize(mean=[0.485, 0.456, 0.406],
+        #                                                            std=[0.225, 0.225, 0.225])])
         test_pose_dataset = datasets.getDataset(
             self.args.test_dataset, self.args.test_data_dir, self.args.test_filename_list, test_transformations, train_mode=False)
         test_loader = torch.utils.data.DataLoader(
@@ -231,7 +233,7 @@ class train_a0:
             batch_size=self.args.batch_size,
             num_workers=2)
 
-        user_test_dataset = datasets.UserTestDataset(txts=['/data1/xiancai/FACE_ANGLE_DATA/2022_03_31/scene1/test.txt']) # 第二个测试集
+        user_test_dataset = datasets.UserTestDataset(txts=['/data1/xiancai/FACE_ANGLE_DATA/2022_03_31/scene1/test.txt']) # 第二个测试集（自定义数据集）
         user_test_loader = torch.utils.data.DataLoader(
             dataset=user_test_dataset,
             batch_size=self.args.batch_size,
@@ -430,5 +432,7 @@ class train_res18:
 
 
 if __name__ == '__main__':
+   with open('/home/xiancai/face_angle/6DRepNet/train.py') as f:
+       print(f.read())
 
    train_a0().train()

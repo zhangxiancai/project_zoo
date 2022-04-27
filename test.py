@@ -66,6 +66,24 @@ def load_filtered_state_dict(model, snapshot):
     model_dict.update(snapshot)
     model.load_state_dict(model_dict)
 
+def convert_padding(img):
+
+    crop_img = img.copy()
+    pad_0=0.5 # 当前padding 0.5
+    pad_1=0 # 调整后padding 0
+
+    h, w = crop_img.shape[:2]
+    cx, cy = w/2, h/2
+    orig_h,orig_w =h/(1+pad_0*2),w/(1+pad_0*2)
+
+    x1 = int(cx-orig_w*(1+pad_1*2)/2)  # to padding 0
+    x2 = int(cx+orig_w*(1+pad_1*2)/2)
+    y1 = int(cy-orig_h*(1+pad_1*2)/2)
+    y2 = int(cy+orig_h*(1+pad_1*2)/2)
+    crop_img = crop_img[y1:y2, x1:x2, :]
+    cv2.rectangle(img,(x1,y1),(x2,y2),(255,0,0))
+    return img,crop_img
+
 def ttest(model,test_loader,args):
     # 训练时测试
     model.eval()
@@ -130,7 +148,7 @@ def ttest(model,test_loader,args):
 
 def ttest_user(model,test_loader,device = torch.device('cuda:0'),threshold=0.75):
     '''
-    测试自定义数据集（用于训练时测试） (两类：质量好1，质量不好0)
+    测试现场数据集（用于训练时测试） (两类：质量好1，质量不好0)
     :param model:
     :param test_loader:
     :param args:
@@ -222,17 +240,29 @@ def ttest_img_mult():
     测试多个图片并画图保存
     :return:
     '''
-    imgs_glob = '/data1/xiancai/FACE_ANGLE_DATA/2022_04_02/origin_imgs_labs_a0_clean/*'
-    save_dir = '/data1/xiancai/FACE_ANGLE_DATA/other/res_04_02/'
+    imgs_glob = '/data1/xiancai/FACE_ANGLE_DATA/other/test_04_13/Cutout/*'
+    save_dir = '/data1/xiancai/FACE_ANGLE_DATA/other/test_04_13/res_Cutout/'
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
     ls = glob.glob((imgs_glob))
     import classify_pt
     infer=classify_pt.inference()
     for i in ls:
         img = cv2.imread(i)
-        p, y, r = infer.classify(img)
+        # img, crop_img= convert_padding(img) # padding 0.15
+        crop_img =img
+        p, y, r = infer.classify(crop_img)
+
         # quality
+        # p_ratio, y_ratio = max(1 - abs(p) / 100, 0.001), max(1 - abs(y) / 100, 0.001)
+        # q = 2 * p_ratio * y_ratio / (p_ratio + y_ratio)
+
         p_ratio, y_ratio = max(1 - abs(p) / 100, 0.001), max(1 - abs(y) / 100, 0.001)
-        q = 2 * p_ratio * y_ratio / (p_ratio + y_ratio)
+        h,w =crop_img.shape[:2]
+        size=min(math.sqrt(h**2+w**2),100)
+        size =size/100
+        q = p_ratio*0.45 + y_ratio*0.45 + size*0.1
+
         # draw and save
         text = f'{round(q, 2)}'
         cv2.putText(img, text, (20, 20), 0, 0.6, [0, 0, 255] if q < 0.7 else [0, 255, 0], thickness=2)
@@ -240,9 +270,10 @@ def ttest_img_mult():
         cv2.imwrite(f'{save_dir}{save_name}', img)
 
 
+
 if __name__ == '__main__':
 
-    ttest_user_offline()
+    ttest_img_mult()
 
 
     # device = torch.device('cuda:0')

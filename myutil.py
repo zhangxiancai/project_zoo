@@ -319,9 +319,9 @@ class Scene:
         print(f'saved to {txt}')
 
 if  __name__ == '__main__':
-    # Web_collection().collect_v2()
+    Web_collection().collect_v2()
     # Pose_300W_LP().make_txt()
     # pass
 
-    Scene().make_txt()
+    # Scene().make_txt()
 

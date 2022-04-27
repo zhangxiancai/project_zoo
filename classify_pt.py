@@ -5,6 +5,8 @@ from model import SixDRepNet,Resnet18_face_angle
 import rep_utils
 import torch
 #
+# 测试脚本：/home/xiancai/face_angle/Face-Yaw-Roll-Pitch-from-Pose-Estimation-using-OpenCV/myutil_v3.py
+
 
 class inference:
 
@@ -45,7 +47,7 @@ class inference:
 
     # Test the Model
     model.eval()  # Change model to 'eval' mode (BN uses moving mean/var).
-    print(f'model:{pt_path}')
+    print(f'face angle model:{pt_path}')
 
     def classify(self, img):
 

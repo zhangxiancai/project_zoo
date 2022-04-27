@@ -238,7 +238,7 @@ def noBiasDecay(model, lr, weight_decay):
 
 def convert_half():
     '''
-    取预训练模型A0 2/3的参数
+    制作预训练模型A0-half
     :return:
     '''
     checkpoint = torch.load('/home/xiancai/face_angle/6DRepNet_04/models/RepVGG-A0-train.pth')
@@ -272,7 +272,7 @@ def convert_half():
 
 def convert_A0s():
     '''
-    A0s预训练模型
+    制作预训练模型A0s
     :return:
     '''
     checkpoint = torch.load('/home/xiancai/face_angle/6DRepNet_04/models/RepVGG-A0-train.pth')
@@ -300,6 +300,17 @@ def convert_A0s_stu():
     # save
     torch.save(checkpoint_A0s,'/home/xiancai/face_angle/6DRepNet_04/models/RepVGG-A0s-stu-train.pth')
 
+def compare_weights():
+    '''
+    比较两个相同结构模型的权重差异
+    :return:
+    '''
+    pth1=torch.load('/home/xiancai/face_angle/6DRepNet/output/snapshots/SixDRepNet_1649297858_bs64/RepVGG-A0_epoch_101_mae13.2071.pth')
+    pth2=torch.load('/home/xiancai/face_angle/6DRepNet/output/snapshots/SixDRepNet_1649297858_bs64/RepVGG-A0_epoch_177_mae13.5007.pth')
+
+    for k,v in pth1.items():
+        d=torch.mean(torch.abs(pth2[k]-pth1[k]))
+        print(k,d)
 
 if __name__=='__main__':
-    convert_A0s_stu()
+    compare_weights()
