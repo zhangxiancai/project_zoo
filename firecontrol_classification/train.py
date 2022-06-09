@@ -26,14 +26,14 @@ if __name__ == '__main__':
     parser.add_argument('-root', type=str, default='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset', help='dataset root dir')
     parser.add_argument('-train-list', type=str, default='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/train.txt', help='dataset train list')
     parser.add_argument('-val-list', type=str, default='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/test.txt', help='dataset val list')
-    parser.add_argument('-resume', type=str, default='Result/2021_11_28/resnet18-137-best.pth11', help='resume model path')
+    parser.add_argument('-resume', type=str, default='result/2021_11_28/resnet18-137-best.pth11', help='resume model path')
     args = parser.parse_args()
 
     print(f'total of gpu:{torch.cuda.device_count()}')#
     print(f'dataset:{args.root}')
     #checkpoint directory
     # checkpoint_path = os.path.join('checkpoints', args.net)
-    res_sub_dir=f'exp14_{args.net}_cls{args.num_classes}_bat{args.batch_size}_nogamma_agontra' #
+    res_sub_dir=f'exp14_{args.net}_cls{args.num_classes}_bat{args.batch_size}_nogamma_agontra_test' #
     checkpoint_path = os.path.join('checkpoints',res_sub_dir )
     if os.path.exists(checkpoint_path):
         shutil.rmtree(checkpoint_path) #清空结果

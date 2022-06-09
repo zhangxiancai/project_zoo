@@ -50,7 +50,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 device = torch.device('cuda:0')
 # device=torch.device('cpu')
-det_model_address='/home/xiancai/fire-equipment-demo/firecontrol_detection/Result/2021_12_06/best.pt'
+det_model_address='/home/xiancai/fire-equipment-demo/firecontrol_detection/result/2021_12_06/best.pt'
 # model_detect = attempt_load(os.path.dirname(os.path.realpath(__file__)) + '/best.pt', map_location=device).eval()
 model_detect = attempt_load(det_model_address, map_location=device).eval()
 conf, iou = 0.35, 0.45  # NMS的阈值和iou 0.25 0.45

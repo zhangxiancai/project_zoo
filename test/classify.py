@@ -222,8 +222,8 @@ def classify(img_address,box):
     cv2.imwrite('ttt.jpg',image)# debug
     resized = cv2.resize(image, (112, 112))
     resized = resized[..., ::-1]  # BGR to RGB
-    resized = resized.swapaxes(1, 2).swapaxes(0, 1)
-    resized = np.reshape(resized, [1, 3, 112, 112])
+    resized = resized.swapaxes(1, 2).swapaxes(0, 1) # to c*h*w
+    resized = np.reshape(resized, [1, 3, 112, 112]) # to b*c*h*w
     resized = np.array(resized, dtype=np.float32)
     resized = (resized - 127.5) / 128.0
     img = torch.from_numpy(resized)
@@ -256,7 +256,7 @@ def classify_sim(img_address):
 
 
 # 载入模型
-cls_model_address='/home/xiancai/fire-equipment-demo/firecontrol_classification/Result/2021_12_06/fire_classify_resnet18_cls114_12_06.pth'
+cls_model_address='/home/xiancai/fire-equipment-demo/firecontrol_classification/result/2021_12_06/fire_classify_resnet18_cls114_12_06.pth'
 # cls_model_address='/home/xiancai/fire-equipment-demo/firecontrol_classification/checkpoints/resnet18_cls106_batch16_gamma_exp8/resnet18-124-best_0.9888.pth'
 # 2021_11_28/resnet18-137-best.pthTest set: loss: 0.0873, Accuracy: 0.9695
 cls_number = 114

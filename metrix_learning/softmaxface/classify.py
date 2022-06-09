@@ -120,19 +120,21 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def forward(self, x, out='fc'):
+    def forward(self, x, out_lay=''):
         output = self.conv1(x)
         output = self.conv2_x(output)
         output = self.conv3_x(output)
         output = self.conv4_x(output)
         output = self.conv5_x(output)
-        if out=='conv5_x':
+        if out_lay=='conv5_xd':
+            output=nn.functional.normalize(output.view(1,-1)) #
+            output.detach_()
             return output
         output = self.avg_pool(output)
         output = output.view(output.size(0), -1)
         output = self.dropout(output)
         output = self.fc(output)
-
+        output=nn.functional.normalize(output) #
         return output
 
 
@@ -239,53 +241,39 @@ def classify(img_address, box=''):
     # inference
     # pre = model(img)
     # cls = torch.argmax(pre)
-    feature = model(img)
-    cls=knn(feature,fs_dataset=fs_dataset)
+    feature = model(img,out_lay='conv5_x')
+    print(f'feature:{feature.shape}')
+
+    # knn
+    d_min=None
+    for k,v in fs_dataset.items():
+        d=nn.functional.mse_loss(feature.view(1,-1), v.view(1,-1))# err/total: 114/1379  acc:0.9173313995649021
+        # d = nn.functional.cosine_similarity(feature.view(1,-1), v.view(1,-1))
+        if not d_min or d<d_min:
+            cls = k
+            d_min = d
+
     if box=='':
         return cls
     else:
         return cls_names[int(cls)]
 
 
-def sample():
+
+def knn(feature,fs_dataset):
     '''
-    从分类数据集中选择各类别图片一张 注册到output_dir
-    :return:
+    k近邻
+    :param feature: 待分类图片的特征
+    :return: 与数据集中最近的特征的类别
     '''
-    input_dir='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/'
-    output_dir='fs_dataset/'
-    ls = os.listdir(input_dir)
-    hm=dict()
-    res=[]
-    for i in ls:
-        if i in ('test.txt','train.txt'):
-            continue
-        ty=i.split('_')[0]
-        hm[ty]=[i] if not hm.get(ty) else hm[ty]+[i]
-
-    dates=['10_15','11_23','11_24','11_27','11_28','11_30','12_01','12_03']
-    dates.reverse()
-
-    for v in hm.values():
-
-        # per type
-        hm_temp = dict()
-        for i in v:
-            d=i.split('_d')[1][:5]
-            hm_temp[d]=[i] if not hm_temp.get(ty) else hm_temp[ty]+[i]
-
-        for da in dates: # 优先选择最近日期的
-            if hm_temp.get(da):
-                random.shuffle(hm_temp[da])
-                res.append(hm_temp[da][0]) # 选择
-                break
-
-    # save
-    for r in res:
-        shutil.copy(input_dir+r,output_dir+r)
-        # print(f'saved to {output_dir+r}')
-
-
+    d_min=None
+    for k,v in fs_dataset.items():
+        d=nn.functional.mse_loss(feature.view(1,-1), v.view(1,-1))# err/total: 114/1379  acc:0.9173313995649021
+        # d = nn.functional.cosine_similarity(feature.view(1,-1), v.view(1,-1))
+        if not d_min or d<d_min:
+            res = k
+            d_min = d
+    return res
 
 
 
@@ -310,30 +298,16 @@ def init_fs():
         # resized = (resized - 127.5) / 127.5
         img = torch.from_numpy(resized)
 
-        f=model(img)
+        f=model(img,out_lay='conv5_x')
         res[lab]=f
     return res
 
 
-def knn(feature,fs_dataset):
-    '''
-    k近邻
-    :param feature: 待分类图片的特征
-    :return: 与数据集中最近的特征的类别
-    '''
-    d_min=None
-    for k,v in fs_dataset.items():
-        d=nn.functional.mse_loss(feature, v)
-        if not d_min or d<d_min:
-            res = k
-            d_min = d
-    return res
-
-
-
 # 载入模型
-cls_model_address = '/home/xiancai/fire-equipment-demo/firecontrol_classification/Result/2021_12_06/fire_classify_resnet18_cls114_12_06.pth'
+cls_model_address = '/home/xiancai/fire-equipment-demo/firecontrol_classification/result/2021_12_06/fire_classify_resnet18_cls114_12_06.pth'
+# cls_model_address='/home/xiancai/fire-equipment-demo/firecontrol_classification/result/2021_11_30/resnet18-142-best_cls81_0.9828.pth'
 cls_number = 114
+
 
 cls_names = {0: '65水带', 1: '80水带', 2: '多功能消防水枪', 3: '黄色消防头盔', 4: '空呼气瓶9L', 5: '灭火防护服',
              6: '灭火防护手套', 7: '灭火防护靴', 8: '消防安全腰带', 9: '泡沫枪PQ6', 10: '抢险救援服',
@@ -363,6 +337,7 @@ model = resnet18(cls_number)
 load_model(model, cls_model_address)  # accuary=0.9877
 model.eval()
 fs_dataset=init_fs()
+print(f'fs.shape:{fs_dataset}')
 
 if __name__ == '__main__':
 
@@ -371,7 +346,7 @@ if __name__ == '__main__':
     # print(cls)
 
     # 载入测试图片集 测试分类模型精度
-    data = '/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/test.txt'
+    data = '/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/train.txt'
     root = '/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/'
     print(f'test model:{cls_model_address}\ntest data:{data}')
     with open(data) as f:
@@ -380,7 +355,7 @@ if __name__ == '__main__':
         for i in ls:
             im_labs.append(i.strip().split(' '))
 
-    res = np.zeros((cls_number, cls_number), int)  # 分类结果
+    res = np.zeros((114, 114), int)  # 分类结果
     errs = []
     for img_addr, lab in im_labs:
         lab = int(lab)

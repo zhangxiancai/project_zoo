@@ -150,7 +150,7 @@ def detect_classify(img_address):
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 device = torch.device('cuda:0')
 # device=torch.device('cpu')
-det_model_address='/home/xiancai/fire-equipment-demo/firecontrol_detection/Result/2021_11_25/best.pt'
+det_model_address='/home/xiancai/fire-equipment-demo/firecontrol_detection/result/2021_11_25/best.pt'
 # det_model_address='/home/xiancai/fire-equipment-demo/detect_classify/best.pt'
 # model_detect = attempt_load(os.path.dirname(os.path.realpath(__file__)) + '/best.pt', map_location=device).eval()
 model_detect = attempt_load(det_model_address, map_location=device).eval()
@@ -217,7 +217,7 @@ if __name__ == '__main__':
                 r_ac=round(re[r_in]/tot,4) if tot!=0 else 0.0
                 if r_ac > 0.01 and r_in!=i: #
                     tag+=f' {classify.cls_names[r_in]}:{r_ac}'
-        r_inf=f'{i}:\ttot:{tot}\tacc:{acc} \t{classify.cls_names[i]} {tag}' #''.expandtabs(8)
+        r_inf=f'{i}:\ttot:{tot}\tacc:{acc} \t{classify.cls_names[i]} {tag}' #print('a\tb'.expandtabs(8))
         print(r_inf)
         res_inf.append([acc,r_inf])
 

@@ -85,7 +85,7 @@ transform = A.Compose([
     A.RandomRotate90(p=0.5),  # 旋转
     A.HorizontalFlip(p=0.5),
     A.VerticalFlip(p=0.5),
-    A.ShiftScaleRotate(p=0.1), #
+    A.ShiftScaleRotate(p=0.1), # 随机仿射变换
 
     # A.RandomGamma(p=0.1), # 亮度增强
     A.MedianBlur(blur_limit=[1, 7], p=0.1),

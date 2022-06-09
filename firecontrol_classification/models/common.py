@@ -1,6 +1,7 @@
 # This file contains modules common to various models
 
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -9,6 +10,7 @@ import torch
 import torch.nn as nn
 from PIL import Image, ImageDraw
 
+debug=sys.path
 from utils.datasets import letterbox
 from utils.general import non_max_suppression, make_divisible, scale_coords, xyxy2xywh
 from utils.plots import color_list
@@ -25,8 +27,8 @@ def channel_shuffle(x, groups):
     channels_per_group = num_channels // groups
 
     # reshape
-    x = x.view(batchsize, groups, channels_per_group, height, width)  # b*2*c/2*h*w
-    x = torch.transpose(x, 1, 2).contiguous() # b*c/2*2*h*w
+    x = x.view(batchsize, groups, channels_per_group, height, width)
+    x = torch.transpose(x, 1, 2).contiguous()
 
     # flatten
     x = x.view(batchsize, -1, height, width)
@@ -157,11 +159,11 @@ class ShuffleV2Block(nn.Module):
 
     def forward(self, x):
         if self.stride == 1:
-            x1, x2 = x.chunk(2, dim=1) #
+            x1, x2 = x.chunk(2, dim=1)
             out = torch.cat((x1, self.branch2(x2)), dim=1)
         else:
             out = torch.cat((self.branch1(x), self.branch2(x)), dim=1)
-        out = channel_shuffle(out, 2) # 调整信道顺序
+        out = channel_shuffle(out, 2)
         return out
 
 

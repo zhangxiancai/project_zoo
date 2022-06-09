@@ -1014,6 +1014,129 @@ def remove_xxdate_from_classify_dataset():
             print(f'{tag}/{len(ls)}:{input+i} removed')
 
 
+def make_fire_classify_dataset_metrix():
+    '''
+    制作度量识别训练验证集
+    :return:
+    '''
+    input='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/'
+    output='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset_metrix/'
+    output_tra=f'{output}train.txt'
+    output_val = f'{output}test.txt'
+
+    ls = os.listdir(input)
+    res = []
+    for i in ls:
+        if i == 'train.txt' or i == 'test.txt':
+            continue
+        x = i  # 图片地址
+        y = i.split('_')[0]  # 类别
+        res.append(x + ' ' + y)
+
+    # 划分 各类随机抽~%
+    # flag=2
+    ls_img_tra = []
+    ls_img_val = []
+    hm_img = dict()  # k:类别 v:文件名列表
+    for i in res:
+        ty = i.split(' ')[-1]  # 取前缀为类别
+        if not hm_img.get(ty):
+            hm_img[ty] = [i]
+        else:
+            hm_img[ty].append(i)
+    for k in hm_img.keys():
+        random.shuffle(hm_img[k])
+        flag = max(int(0.1 * len(hm_img[k])), 1)  # 各类别~%
+        ls_img_val += hm_img[k][:flag]
+        ls_img_tra += hm_img[k][flag:]
+
+    random.shuffle(ls_img_val)
+    random.shuffle(ls_img_tra)  # 打乱顺序，一个batch内的数据类别更加丰富 重要！！！
+    with open(output_tra, 'w') as f:
+        for i in ls_img_tra:
+            f.write(i + '\n')
+
+    # metrix验证集 [im0,im1,是否同类]
+    with open(output_val, 'w') as f:
+        for i in ls_img_val:
+            im0,la0=i.split(' ')
+            for j in ls_img_val:
+                im1,la1=j.split(' ')
+
+                # 均衡
+                if im0 == im1:
+                    continue
+                if la0!=la1 and random.random()>1/113:
+                    continue
+                f.write(im0+' '+ im1 + ' ' + str(int(la0==la1)) + '\n') #
+
+    print(f'total:{len(ls) - 2}')
+    print(f'saved to {output_tra} :{len(ls_img_tra)} and {output_val}:{len(ls_img_val)}')
+
+def make_fire_classify_dataset_metrix_remove():
+    '''
+    制作度量识别训练验证集,不包括某个日期数据
+    :return:
+    '''
+    remove_date='12_03'
+    input='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset/'
+    output='/home/xiancai/DATA/FIRE_DATA/fire_classify_dataset_metrix/'
+    output_tra=f'{output}train_no_{remove_date}.txt'
+    output_val = f'{output}test_no_{remove_date}.txt'
+
+    ls = os.listdir(input)
+    res = []
+    for i in ls:
+        if i == 'train.txt' or i == 'test.txt':
+            continue
+
+        da = i.split('_d')[1][:5]
+        print(f'debug: date:{da}')
+        if da ==remove_date:
+            continue
+        x = i  # 图片地址
+        y = i.split('_')[0]  # 类别
+        res.append(x + ' ' + y)
+
+    # 划分 各类随机抽~%
+    # flag=2
+    ls_img_tra = []
+    ls_img_val = []
+    hm_img = dict()  # k:类别 v:文件名列表
+    for i in res:
+        ty = i.split(' ')[-1]  # 取前缀为类别
+        if not hm_img.get(ty):
+            hm_img[ty] = [i]
+        else:
+            hm_img[ty].append(i)
+    for k in hm_img.keys():
+        random.shuffle(hm_img[k])
+        flag = max(int(0.1 * len(hm_img[k])), 1)  # 各类别~%
+        ls_img_val += hm_img[k][:flag]
+        ls_img_tra += hm_img[k][flag:]
+
+    random.shuffle(ls_img_val)
+    random.shuffle(ls_img_tra)  # 打乱顺序，一个batch内的数据类别更加丰富 重要！！！
+    with open(output_tra, 'w') as f:
+        for i in ls_img_tra:
+            f.write(i + '\n')
+
+    # metrix验证集 [im0,im1,是否同类]
+    with open(output_val, 'w') as f:
+        for i in ls_img_val:
+            im0,la0=i.split(' ')
+            for j in ls_img_val:
+                im1,la1=j.split(' ')
+
+                # 均衡
+                if im0 == im1:
+                    continue
+                if la0!=la1 and random.random()>1/113:
+                    continue
+                f.write(im0+' '+ im1 + ' ' + str(int(la0==la1)) + '\n') #
+
+    print(f'total:{len(ls) - 2}')
+    print(f'saved to {output_tra} :{len(ls_img_tra)} and {output_val}:{len(ls_img_val)}')
 if __name__ == '__main__':
     # check_fire_classify_dataset()
     # check_yolotojson()
@@ -1021,18 +1144,19 @@ if __name__ == '__main__':
     '''
     处理原始数据，得到检测和识别数据集
     '''
-    date='12_03'
-    process_fire_11_23() #
-    get_txt_from_xml()
-    # # remove_xxdate_from_fire_detect_dataset()
-    add_fire_11_23_to_firecontrol()
-
+    # date='12_03'
+    # process_fire_11_23() #
+    # get_txt_from_xml()
+    # # # remove_xxdate_from_fire_detect_dataset()
+    # add_fire_11_23_to_firecontrol()
     #
-    changeImages()
-    # remove_xxdate_from_classify_dataset()
-    add_classify_dataset()
-    set_classify_tra_val()
-    # # print(date)
+    # #
+    # changeImages()
+    # # remove_xxdate_from_classify_dataset()
+    # add_classify_dataset()
+    # set_classify_tra_val()
+    # # # print(date)
 
 
 
+    make_fire_classify_dataset_metrix_remove()

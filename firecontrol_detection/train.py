@@ -439,13 +439,13 @@ def train(hyp, opt, device, tb_writer=None, wandb=None):
 if __name__ == '__main__':
     #python3 -u train.py 2>&1 | tee  train.log
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', type=str, default='/home/xiancai/fire-equipment-demo/firecontrol_detection/Result/2021_12_01/best.pt', help='initial weights path')
+    parser.add_argument('--weights', type=str, default='/home/xiancai/fire-equipment-demo/firecontrol_detection/result/2021_12_01/best.pt', help='initial weights path')
     parser.add_argument('--cfg', type=str, default='models/yolov5n-0.5.yaml', help='model.yaml path')
     parser.add_argument('--data', type=str, default='data/firecontrol.yaml', help='data.yaml path')
     parser.add_argument('--hyp', type=str, default='data/hyp.scratch.yaml', help='hyperparameters path')
     parser.add_argument('--epochs', type=int, default=200)
     parser.add_argument('--batch-size', type=int, default=32, help='total batch size for all GPUs')
-    parser.add_argument('--img-size', nargs='+', type=int, default=[416, 416], help='[train, test] image sizes')
+    parser.add_argument('--img-size', nargs='+', type=int, default=[256, 416], help='[train, test] image sizes')
     parser.add_argument('--rect', action='store_true', help='rectangular training')
     parser.add_argument('--resume', nargs='?', const=True, default=False, help='resume most recent training')
     parser.add_argument('--nosave', action='store_true', help='only save final checkpoint')
