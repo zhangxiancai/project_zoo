@@ -1,0 +1,30 @@
+# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+# COCO 2017 dataset http://cocodataset.org by Microsoft
+# Example usage: python train.py --data coco.yaml
+# parent
+# ├── yolov5
+# └── datasets
+#     └── coco  ← downloads here
+
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+
+#train: [/data1/xiancai/BABY_DATA/baby_detect_yolov5/images/train/,/data1/xiancai/BABY_DATA/baby_detect_yolov5_03_03/images/train/]  #
+#val: [/data1/xiancai/BABY_DATA/baby_detect_yolov5/images/val,/data1/xiancai/BABY_DATA/baby_detect_yolov5_03_03/images/val]  #
+
+val: [
+    /data1/xiancai/BABY_DATA/baby_detect_yolov5/images/train/,
+    /data1/xiancai/BABY_DATA/baby_detect_yolov5_03_18/images/train/,
+    /data1/xiancai/BABY_DATA/baby_detect_yolov5_05_17/images/train/,
+    /data1/xiancai/BABY_DATA/baby_detect_yolov5/images/val/,
+    /data1/xiancai/BABY_DATA/baby_detect_yolov5_03_18/images/val/,
+    /data1/xiancai/BABY_DATA/baby_detect_yolov5_05_17/images/val/] #
+
+
+# Classes
+nc: 1  # number of classes
+names: ['baby']  # class names
+
+
+# Download script/URL (optional)
+
