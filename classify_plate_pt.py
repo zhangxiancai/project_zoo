@@ -16,7 +16,8 @@ import torch
 
 class inference:
 
-    model_path = '/home/xiancai/plate/LPRNet_Pytorch/Result/2022_04_20_more_agu_data/best_0.9828.pth'
+    model_path = '/home/xiancai/plate/LPRNet_Pytorch/Result/2022_05_23/best_0.9826.pth'
+    # model_path = '/home/xiancai/plate/LPRNet_Pytorch/Result/2022_04_20_more_agu_data/best_0.9828.pth'
     # model_path = '/home/xiancai/plate/LPRNet_Pytorch/weights/1650613218/best_0.9946.pth'
     # model_path = '/home/xiancai/plate/LPRNet_Pytorch/weights/1650781812/best_0.9976.pth'
     # model_path = '/home/xiancai/plate/LPRNet_Pytorch/Result/2022_02_21/best_0.9816.pth'
@@ -158,7 +159,7 @@ class test:
         inf = inference()
 
         img_glob='/data1/xiancai/PLATE_DATA/kakou/plate/*/*'
-        save_dir='/data1/xiancai/PLATE_DATA/other/test_04_25/res_kako_plate/'
+        save_dir='/data1/xiancai/PLATE_DATA/other/test_05_23/'
 
         ls=glob.glob(img_glob)
         acc=0.0
