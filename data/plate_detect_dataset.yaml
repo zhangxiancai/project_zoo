@@ -1,0 +1,34 @@
+#PASCAL VOC dataset http://host.robots.ox.ac.uk/pascal/VOC/
+# Train command: python train.py --data voc.yaml
+# Default dataset location is next to /yolov5:
+#   /parent_folder
+#     /VOC
+#     /yolov5
+
+
+# download command/URL (optional)
+# download: bash data/scripts/get_voc.sh
+
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+#2452 images
+#train: [/data1/xiancai/PLATE_DATA/plate_detect_dataset_driving/images/train,
+#        /data1/xiancai/PLATE_DATA/plate_detect_dataset_0.25ccpd/images/train,]
+#val: [/data1/xiancai/PLATE_DATA/plate_detect_dataset_driving/images/val,
+#      /data1/xiancai/PLATE_DATA/plate_detect_dataset_0.25ccpd/images/val]
+
+train: [/data1/xiancai/PLATE_DATA/zhwei/jv_clean_yolov5/images/train,
+        /data1/xiancai/PLATE_DATA/zhwei/patch_v3.0_20220301/Yellow_yolov5/images/train,
+        /data1/xiancai/PLATE_DATA/plate_detect_dataset_0.5ccpd/images/train]
+val: [/data1/xiancai/PLATE_DATA/zhwei/jv_clean_yolov5/images/val,
+      /data1/xiancai/PLATE_DATA/zhwei/patch_v3.0_20220301/Yellow_yolov5/images/val,
+      /data1/xiancai/PLATE_DATA/plate_detect_dataset_0.5ccpd/images/val]
+
+#测试
+#train: [/data1/xiancai/PLATE_DATA/zhwei/patch_v3.0_20220301/Yellow_yolov5/images/train]
+#val: [/data1/xiancai/PLATE_DATA/zhwei/patch_v3.0_20220301/Yellow_yolov5/images/val]
+
+# number of classes
+nc: 1
+
+# class names
+names: ['plate']

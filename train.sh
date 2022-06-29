@@ -1,0 +1,1 @@
+nohup python3 -m torch.distributed.launch --nproc_per_node 4 train.py >log/train_05_07.log 2>&1 &
