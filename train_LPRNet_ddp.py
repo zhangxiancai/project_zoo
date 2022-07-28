@@ -3,8 +3,7 @@
 
 '''
 单机多gpu：DistributedDataParallel
-Pytorch implementation for LPRNet.
-Author: aiboy.wei@outlook.com .
+参考 https://github.com/ultralytics/yolov5
 
 python3 -m torch.distributed.launch --master_port 9999 --nproc_per_node=2 train_LPRNet_ddp.py
 '''
@@ -81,7 +80,7 @@ def get_parser():
     parser.add_argument('--save_folder', default='./weights/', help='Location to save checkpoint models')
     parser.add_argument('--pretrained_model', default='/home/xiancai/plate/LPRNet_Pytorch/Result/2022_04_20_more_agu_data/best_0.9828.pth', help='pretrained base model')
     parser.add_argument("--local_rank", default=os.getenv('LOCAL_RANK', -1), type=int) # for ddp
-    parser.add_argument('--sync-bn', action='store_true', help='use SyncBatchNorm, only available in DDP mode')
+    parser.add_argument('--sync-bn', action='store_true', help='use SyncBatchNorm, only available in DDP mode') # for ddp
 
     args = parser.parse_args()
 

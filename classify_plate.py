@@ -257,21 +257,22 @@ if __name__=='__main__':
     # model_path='/home/xiancai/LPRNet_Pytorch/result/2022_01_12/best_adjust_0.9811.onnx'
     # model_path='/home/xiancai/LPRNet_Pytorch/result/test/best_0.9815_gen_change_color.onnx'
     # model_path='/home/xiancai/LPRNet_Pytorch/result/test/best_0.9566_focal_rmsprop_nopretrain_epoch100.onnx'
-    model_path='/home/xiancai/plate/LPRNet_Pytorch/Result/2022_02_21/best_0.9816_focal_changev2_genv2_sim.onnx'
     # model_path = '/home/xiancai/LPRNet_Pytorch/result/test/best_0.9811_gen_plate.onnx'
     # model_path = '/home/xiancai/LPRNet_Pytorch/result/test/best_0.9814_change_color.onnx'
     # model_path = '/home/xiancai/LPRNet_Pytorch/result/2022_01_10/best_0.9665.onnx'
+    # model_path = '/home/xiancai/plate/LPRNet_Pytorch/Result/2022_02_21/best_0.9816_focal_changev2_genv2_sim.onnx'
+    model_path='/home/xiancai/plate/LPRNet_Pytorch/Result/2022_05_23/best_0.9826_sim.onnx'
 
-    # imgs_path = '/data1/xiancai/PLATE_DATA/plate_classify_dataset_adjust/val.txt'
+    imgs_path = '/data1/xiancai/PLATE_DATA/plate_classify_dataset_adjust/val.txt'
     # imgs_path = '/data1/xiancai/PLATE_DATA/yello_326/plate_clean/'
-    imgs_path = '/data1/xiancai/PLATE_DATA/zhwei/patch_v3.0_20220301/Yellow_plate/'
+    # imgs_path = '/data1/xiancai/PLATE_DATA/zhwei/patch_v3.0_20220301/Yellow_plate/'
 
-    SAVE = True
+    SAVE = False
     ACC = 0 # 0: 测试中文字符及数字 1: 仅测试中文字符 2：只测试数字和字母
     # CHARS_NUMB_ACC = False  # 中文字符及数字全对为正确
     # CHARS_ACC=True if not CHARS_NUMB_ACC else None # (当CHARS_NUMB_ACC为false时有效)True：仅测试中文字符
 
-    # imgs_path为txt时
+    # imgs_path为txt时有效
     GREEN = False  # True: 只测试绿牌
     WAN=False ## True: 不测试皖牌
 

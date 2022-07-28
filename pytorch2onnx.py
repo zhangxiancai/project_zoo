@@ -9,12 +9,12 @@ from model.LPRNet import LPRNet, CHARS,LSTM_LPRNet
 import onnx
 import onnxruntime as ort
 
-output_onnx = '/home/xiancai/plate/LPRNet_Pytorch/Result/test/best_0.9946_lstm.onnx'
-pytorch_model = '/home/xiancai/plate/LPRNet_Pytorch/Result/test/best_0.9946_lstm.pth'
+output_onnx = '/home/xiancai/plate/LPRNet_Pytorch/Result/2022_05_23/best_0.9826.onnx'
+pytorch_model = '/home/xiancai/plate/LPRNet_Pytorch/Result/2022_05_23/best_0.9826.pth'
 
 
-# model =  LPRNet(class_num=len(CHARS), dropout_rate=0, export=True).cpu()
-model =  LSTM_LPRNet(class_num=len(CHARS), dropout_rate=0, export=True).cpu()
+model =  LPRNet(class_num=len(CHARS), dropout_rate=0, export=True).cpu()
+# model =  LSTM_LPRNet(class_num=len(CHARS), dropout_rate=0, export=True).cpu()
 # model = build_lprnet(class_num=len(CHARS0),dropout_rate=0).cpu()
 
 checkpoint = torch.load(pytorch_model, map_location={'cuda:6':'cuda:0'})
